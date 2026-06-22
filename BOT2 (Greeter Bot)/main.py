@@ -12,7 +12,7 @@ def init_bot():
 
 greeter_bot = init_bot()
 keyword = {
-    "ping": "Pong! 🏓, Helloo!.",
+    "ping": "Pong! 🏓 Helloo!",
     "hello": "Hi there!",
     "bye": "Hell- I mean, Bye!"
 }
