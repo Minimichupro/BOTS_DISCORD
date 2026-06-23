@@ -2,7 +2,7 @@ import os
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
-
+from database import init_db
 
 def init():
     bot_intents = discord.Intents.default()
@@ -15,6 +15,7 @@ Casino_Bot = init()
 
 @Casino_Bot.event
 async def on_ready():
+    await init_db()
     await Casino_Bot.load_extension('cogs.slots')
 
     await Casino_Bot.tree.sync()
