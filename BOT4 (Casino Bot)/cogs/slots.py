@@ -3,13 +3,13 @@ from discord.ext import commands
 from discord import app_commands
 # slot spins returns: slot_display, prize_mult, bet * prize_mult
 from casino_logic import slot_spin
-from casino_logic import insult_giver
+from casino_logic import slots_insult_giver_broke
 from database import get_balance
 from database import update_balance
 
 
 
-class CommandBot(commands.Cog):
+class SlotsCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
@@ -19,7 +19,7 @@ class CommandBot(commands.Cog):
         user_balance = await get_balance(interaction.user.id)
 
         if user_balance == 0:
-            insult = insult_giver()
+            insult = slots_insult_giver_broke()
             
             await interaction.response.send_message(insult, ephemeral=True)
             return
@@ -63,12 +63,12 @@ class CommandBot(commands.Cog):
         casino_embed.add_field(name="Multiplier", value=f"{mult}", inline=True)
 
         if net_payout > 0:
-            casino_embed.add_field(name="Payout", value=f"+{net_payout}💵", inline=True)
+            casino_embed.add_field(name="Payout", value=f"+{net_payout}💵", inline=False)
         else:
-            casino_embed.add_field(name="Payout", value=f"{net_payout}💵", inline=True)
+            casino_embed.add_field(name="Payout", value=f"{net_payout}💵", inline=False)
 
 
         await interaction.response.send_message(embed=casino_embed)
 
 async def setup(bot: commands.Bot):
-    await bot.add_cog(CommandBot(bot))
+    await bot.add_cog(SlotsCog(bot))

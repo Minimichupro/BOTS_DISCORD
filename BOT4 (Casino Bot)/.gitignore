@@ -1,4 +1,9 @@
+# Ignore environment variables and local secrets
 .env
+
+# Ignore Python bytecode and cache directories
+__pycache__/
+*.pyc
 
 # Database
 casino.db
