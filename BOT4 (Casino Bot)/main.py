@@ -19,6 +19,10 @@ async def on_ready():
     await Casino_Bot.load_extension('cogs.slots')
     await Casino_Bot.load_extension('cogs.balance')
 
+    test_guild = discord.Object(id=1314969646989971466)
+    Casino_Bot.tree.copy_global_to(guild=test_guild)
+
+    await Casino_Bot.tree.sync(guild=test_guild)
     await Casino_Bot.tree.sync()
 
     print("Ready to gamble!")

@@ -20,7 +20,7 @@ class BalanceCog(commands.Cog):
         if balance <= 0:
             insult_description = balance_insult_giver_broke()
 
-        elif 1 <= balance < 1000:
+        elif 0 < balance < 1000:
             insult_description = balance_insult_giver_poor()
 
         elif 1000 <= balance < 2500:
