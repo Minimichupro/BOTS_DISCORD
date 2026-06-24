@@ -17,6 +17,7 @@ Casino_Bot = init()
 async def on_ready():
     await init_db()
     await Casino_Bot.load_extension('cogs.slots')
+    await Casino_Bot.load_extension('cogs.balance')
 
     await Casino_Bot.tree.sync()
 
