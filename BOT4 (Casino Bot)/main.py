@@ -18,6 +18,7 @@ async def on_ready():
     await init_db()
     await Casino_Bot.load_extension('cogs.slots')
     await Casino_Bot.load_extension('cogs.balance')
+    await Casino_Bot.load_extension('cogs.daily')
 
     test_guild = discord.Object(id=1314969646989971466)
     Casino_Bot.tree.copy_global_to(guild=test_guild)

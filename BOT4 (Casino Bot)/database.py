@@ -45,7 +45,7 @@ async def update_balance(user_id, amount):
         async with db.cursor() as cur:
             await cur.execute("""
                               UPDATE users
-                              SET balance = balance + ?
+                              SET balance = MAX(0, balance + ?)
                               WHERE user_id = ?
                               """, (amount, user_id)
                               )

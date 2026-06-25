@@ -2,7 +2,7 @@ import random
 
 
 def slot_spin(bet):
-    symbols = ["🍒", "🍋", "🍇"]
+    symbols = ["🍒", "🍋", "🍇", "🍊", "💎"]
     
     spin_result = random.choices(symbols, k=3)
     slot_display = [spin_result[0], spin_result[1], spin_result[2]]
@@ -16,10 +16,36 @@ def slot_spin(bet):
 
     else:
         prize_mult = 0
+
+    final_prize = int(bet * prize_mult)
     
-    return slot_display, prize_mult, bet * prize_mult
+    return slot_display, prize_mult, final_prize
 
 
+def pick_daily():
+    outcomes = ["standard", "loss", "jackpot"]
+    probabilities = [0.70, 0.20, 0.10]
+
+    chosen_outcome = random.choices(outcomes, weights=probabilities)[0]
+    
+    if chosen_outcome == "standard":
+        reward = random.randint(50, 150)
+        msg = daily_insult_giver_standard()
+
+    elif chosen_outcome == "loss":
+        reward = random.randint(-1000, -500)
+        msg = daily_insult_giver_loss()
+    
+    else:
+        reward = random.randint(3000, 4000)
+        msg = daily_insult_giver_jackpot()
+
+    return chosen_outcome, reward, msg
+
+
+
+
+## INSULT GIVERS
 def slots_insult_giver_broke():
     insult_list =[
                 "99% of gamblers quit right before they hit it big. Too bad you literally can't afford to be the 1%.",
@@ -30,6 +56,7 @@ def slots_insult_giver_broke():
     
     insult = random.choice(insult_list)
     return insult
+
 
 
 def balance_insult_giver_broke():
@@ -74,3 +101,67 @@ def balance_insult_giver_sugar_daddy():
     
     insult = random.choice(insult_list)
     return insult
+
+
+
+def daily_insult_giver_standard():
+    insult_list =["Here is your basic daily allowance. Don't spend it all in one place, peasant.",
+                  "Just the regular amount for a regular user. Nothing fancy.",
+                  "Your daily crumbs have been delivered. Enjoy being slightly less broke."]
+    
+    insult = random.choice(insult_list)
+    return insult
+
+
+def daily_insult_giver_loss():
+    insult_list =["Unlucky! You tripped on your way to the bank and dropped your daily reward down a sewer.",
+                  "The server tax collected your daily payment instead. Imagine being this broke.",
+                  "You tried to claim your daily pay, but the wallet system went bankrupt. You actually lost cash."]
+    
+    insult = random.choice(insult_list)
+    return insult
+
+
+def daily_insult_giver_jackpot():
+    insult_list =["HOLY COW! You actually hit the jackpot! The casino admins are crying right now.",
+                  "Are you hacking? You just won the daily jackpot! Go buy something ridiculous.",
+                  "The universe miscalculated and gave you the jackpot. Enjoy it before we patch it."]
+    
+    insult = random.choice(insult_list)
+    return insult
+
+
+## TITLE GIVERS
+def daily_title_giver_standard():
+    title_list =["The Usual Crumbs",
+                 "Bare Minimum Achieved",
+                 "Mediocre Payday",
+                 "Just Another Day, Just Another Dollar",
+                 "Slightly Less Broke Now"]
+    
+    title = random.choice(title_list)
+    return title
+
+
+def daily_title_giver_jackpot():
+    title_list =["🎰 ABSOLUTE JACKPOT! 🎰",
+                 "RNJesus Has Blessed You 🙏",
+                 "Sugar Daddy Status Unlocked 🤑",
+                 "Bro Is Actually Rich Now",
+                 "Stop Hacking The Bot! 🛑",
+                 "Infinite Wealth Glitch",
+                 "We Are Bankrupt 💸",]
+    
+    title = random.choice(title_list)
+    return title
+
+
+def daily_title_giver_loss():
+    title_list =["Skill Issue 💀",
+                 "L + Ratio + Broke 📉",
+                 "F In The Chat",
+                 "Robbed By The Tax System 💸",
+                 "Tax Evader Caught 👮"]
+    
+    title = random.choice(title_list)
+    return title
