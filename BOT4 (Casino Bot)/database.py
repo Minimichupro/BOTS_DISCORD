@@ -43,6 +43,12 @@ async def get_balance(user_id):
 async def update_balance(user_id, amount):
     async with aiosqlite.connect(DB_PATH) as db:
         async with db.cursor() as cur:
+
+            await cur.execute("""
+                              INSERT OR IGNORE INTO users (user_id)
+                              VALUES (?)""", (user_id,)
+                              )
+
             await cur.execute("""
                               UPDATE users
                               SET balance = MAX(0, balance + ?)
