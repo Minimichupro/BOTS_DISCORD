@@ -56,3 +56,15 @@ async def update_balance(user_id, amount):
                               """, (amount, user_id)
                               )
             await db.commit()
+
+
+async def get_top_players(limit: int) -> list: 
+    async with aiosqlite.connect(DB_PATH) as db:
+        async with db.cursor() as cur:
+
+            await cur.execute("""
+                              SELECT user_id, balance
+                              FROM users
+                              ORDER BY balance DESC LIMIT ?""", (limit,))
+            
+            return list(await cur.fetchall())

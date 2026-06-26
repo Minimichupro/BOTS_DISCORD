@@ -15,7 +15,8 @@ class DailyCog(commands.Cog):
 
 
     @app_commands.command(name="daily", description="Claim your daily income")
-    @app_commands.checks.cooldown(1, 86400.0, key=lambda interaction: interaction.user.id)
+    #@app_commands.checks.cooldown(1, 86400.0, key=lambda interaction: interaction.user.id)
+    @app_commands.checks.cooldown(1, 60.0, key=lambda interaction: interaction.user.id)
     async def daily(self, interaction: discord.Interaction):
         outcome, reward, msg = pick_daily()
 
@@ -57,12 +58,14 @@ class DailyCog(commands.Cog):
     @daily.error
     async def daily_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError) -> None:
         if isinstance(error, app_commands.CommandOnCooldown):
+
             hours = int(error.retry_after // 3600)
             minutes = int((error.retry_after % 3600) // 60)
+            seconds = int(error.retry_after % 60)
             
             cooldown_embed = discord.Embed(
                 title="Cooldown Active!",
-                description=f"You have already claimed your daily reward. Try again in **{hours}h {minutes}m**.",
+                description=f"You have already claimed your daily reward. Try again in **{minutes}m {seconds}s**.",
                 color=discord.Color.orange()
             )
             await interaction.response.send_message(embed=cooldown_embed, ephemeral=True)
