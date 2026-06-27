@@ -5,12 +5,16 @@ from casino_logic import pick_daily
 from casino_logic import daily_title_giver_jackpot
 from casino_logic import daily_title_giver_loss
 from casino_logic import daily_title_giver_standard
-
 from database import update_balance
+from typing import TYPE_CHECKING
+
+# This prevents circular import errors at runtime
+if TYPE_CHECKING:
+    from main import Casino_Bot
 
 
 class DailyCog(commands.Cog):
-    def __init__(self, bot: commands.Bot) -> None:
+    def __init__(self, bot: "Casino_Bot") -> None:
         self.bot = bot
 
 
@@ -19,8 +23,9 @@ class DailyCog(commands.Cog):
     @app_commands.checks.cooldown(1, 60.0, key=lambda interaction: interaction.user.id)
     async def daily(self, interaction: discord.Interaction):
         outcome, reward, msg = pick_daily()
-
-        await update_balance(interaction.user.id, reward)
+        
+        assert self.bot.db is not None
+        await update_balance(self.bot.db, interaction.user.id, reward)
 
         if outcome == "standard":
             title = daily_title_giver_standard()
@@ -72,5 +77,5 @@ class DailyCog(commands.Cog):
         else:
             raise error
         
-async def setup(bot: commands.Bot):
+async def setup(bot: Casino_Bot):
     await bot.add_cog(DailyCog(bot))

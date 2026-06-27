@@ -6,16 +6,20 @@ from casino_logic import balance_insult_giver_broke
 from casino_logic import balance_insult_giver_poor
 from casino_logic import balance_insult_giver_mid
 from casino_logic import balance_insult_giver_sugar_daddy
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from main import Casino_Bot
 
 
 class BalanceCog(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: "Casino_Bot"):
         self.bot = bot
 
 
     @app_commands.command(name="balance", description="Show your own balance")
     async def show_balance(self, interaction: discord.Interaction):
-        balance = await get_balance(interaction.user.id)
+        assert self.bot.db is not None
+        balance = await get_balance(self.bot.db, interaction.user.id)
 
         if balance <= 0:
             insult_description = balance_insult_giver_broke()
@@ -43,5 +47,5 @@ class BalanceCog(commands.Cog):
 
         await interaction.response.send_message(embed=balance_embed)
 
-async def setup(bot: commands.Bot):
+async def setup(bot: Casino_Bot):
     await bot.add_cog(BalanceCog(bot))

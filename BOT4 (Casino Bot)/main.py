@@ -1,35 +1,49 @@
 import os
+import aiosqlite
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 from database import init_db
 
-def init():
-    bot_intents = discord.Intents.default()
-    bot_intents.message_content = True
+class Casino_Bot(commands.Bot):
+    def __init__(self):
+        bot_intents = discord.Intents.default()
+        bot_intents.message_content = True
 
-    bot_client = commands.Bot(command_prefix="/", intents=bot_intents)
-    return bot_client
+        super().__init__(command_prefix="/", intents=bot_intents)
+        self.db = None
 
-Casino_Bot = init()
 
-@Casino_Bot.event
-async def on_ready():
-    await init_db()
-    await Casino_Bot.load_extension('cogs.slots')
-    await Casino_Bot.load_extension('cogs.balance')
-    await Casino_Bot.load_extension('cogs.daily')
-    await Casino_Bot.load_extension('cogs.leaderboard')
+    async def setup_hook(self):
+        
+        self.db = await aiosqlite.connect("casino.db")
+        await init_db(self.db)
 
-    test_guild = discord.Object(id=1314969646989971466)
-    Casino_Bot.tree.copy_global_to(guild=test_guild)
+        await self.load_extension('cogs.slots')
+        await self.load_extension('cogs.balance')
+        await self.load_extension('cogs.daily')
+        await self.load_extension('cogs.leaderboard')
 
-    await Casino_Bot.tree.sync(guild=test_guild)
-    await Casino_Bot.tree.sync()
+        test_guild = discord.Object(id=1314969646989971466)
+        self.tree.copy_global_to(guild=test_guild)
 
-    print("Ready to gamble!")
+        await self.tree.sync(guild=test_guild)
+        #await self.tree.sync()
+
+        print("Ready to gamble!")
+
+
+        async def close(self):
+            if self.db is not None:
+                await self.db.close()
+                print("Database connection closed safely.")
+        
+            await super().close()
 
 load_dotenv()
 TOKEN = os.getenv('BOT_TOKEN') or ""
 
-Casino_Bot.run(TOKEN)
+
+if __name__ == "__main__":
+    casino_bot = Casino_Bot()
+    casino_bot.run(TOKEN)

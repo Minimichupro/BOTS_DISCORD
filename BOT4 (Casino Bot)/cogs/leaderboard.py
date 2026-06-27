@@ -2,9 +2,15 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 from database import get_top_players
+from typing import TYPE_CHECKING
+
+# This prevents circular import errors at runtime
+if TYPE_CHECKING:
+    from main import Casino_Bot
+
 
 class CasinoLeaderboard(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: "Casino_Bot"):
         self.bot = bot
 
     
@@ -13,7 +19,8 @@ class CasinoLeaderboard(commands.Cog):
         
         await interaction.response.defer()
         
-        top_players = await get_top_players(limit=5)
+        assert self.bot.db is not None
+        top_players = await get_top_players(self.bot.db, limit=5)
 
         if not top_players:
             error_embed = discord.Embed(
@@ -60,5 +67,5 @@ class CasinoLeaderboard(commands.Cog):
         await interaction.followup.send(embed=leaderboard_embed)
 
 
-async def setup(bot: commands.Bot):
+async def setup(bot: Casino_Bot):
     await bot.add_cog(CasinoLeaderboard(bot))

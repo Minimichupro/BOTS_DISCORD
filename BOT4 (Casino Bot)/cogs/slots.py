@@ -6,17 +6,24 @@ from casino_logic import slot_spin
 from casino_logic import slots_insult_giver_broke
 from database import get_balance
 from database import update_balance
+from typing import TYPE_CHECKING
+
+# This prevents circular import errors at runtime
+if TYPE_CHECKING:
+    from main import Casino_Bot
 
 
 
 class SlotsCog(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: "Casino_Bot"):
         self.bot = bot
 
 
     @app_commands.command(name="slots", description="Play the slots minigame")
     async def slots(self, interaction: discord.Interaction, bet: int):
-        user_balance = await get_balance(interaction.user.id)
+
+        assert self.bot.db is not None
+        user_balance = await get_balance(self.bot.db, interaction.user.id)
 
         if user_balance == 0:
             insult = slots_insult_giver_broke()
@@ -34,7 +41,7 @@ class SlotsCog(commands.Cog):
 
         display, mult, prize = slot_spin(bet)
         net_payout = prize - bet
-        await update_balance(user_id=interaction.user.id, amount=net_payout)
+        await update_balance(self.bot.db, user_id=interaction.user.id, amount=net_payout)
 
         if mult == 3:
             casino_embed = discord.Embed(
@@ -70,5 +77,5 @@ class SlotsCog(commands.Cog):
 
         await interaction.response.send_message(embed=casino_embed)
 
-async def setup(bot: commands.Bot):
+async def setup(bot: Casino_Bot):
     await bot.add_cog(SlotsCog(bot))
