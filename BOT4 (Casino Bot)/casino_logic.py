@@ -29,7 +29,7 @@ def pick_daily():
     chosen_outcome = random.choices(outcomes, weights=probabilities)[0]
     
     if chosen_outcome == "standard":
-        reward = random.randint(50, 150)
+        reward = random.randint(100, 200)
         msg = daily_insult_giver_standard()
 
     elif chosen_outcome == "loss":
@@ -37,7 +37,7 @@ def pick_daily():
         msg = daily_insult_giver_loss()
     
     else:
-        reward = random.randint(3000, 4000)
+        reward = random.randint(3000, 5000)
         msg = daily_insult_giver_jackpot()
 
     return chosen_outcome, reward, msg
